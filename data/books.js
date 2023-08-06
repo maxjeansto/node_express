@@ -1,0 +1,39 @@
+
+
+export const books = [
+    {
+        id: 1,
+        title: 'Harry Potter and the Chamber of Secrets',
+        author: 'J.K. Rowling',
+        price: 200,
+        year: '1998',
+        description: 'Harry Potter and the Chamber of Secrets is a fantasy novel written by British author J. K. Rowling and the second novel in the Harry Potter series. The plot follows Harrys second year at Hogwarts School of Witchcraft and Wizardry, during which a series of messages on the walls of the schools corridors warn that the Chamber of Secrets has been opened and that the heir of Slytherin would kill all pupils who do not come from all-magical families. These threats are followed by attacks which leave residents of the school petrified. Throughout the year, Harry and his friends Ron and Hermione investigate the attacks.',
+       type: 'Fiction',
+    },
+    {
+        id: 2,
+        title: 'Jurassic Park',
+        author: 'Michael Crichton',
+        year: '1990',
+        description: 'Jurassic Park is a 1990 science fiction novel written by Michael Crichton. A cautionary tale about genetic engineering, it presents the collapse of an amusement park showcasing genetically re-created dinosaurs to illustrate the mathematical concept of chaos theory and its real world implications. A sequel titled The Lost World, also written by Crichton, was published in 1995. In 1997, both novels were re-published as a single book titled Michael Crichtons Jurassic World, unrelated to the film of the same name.',
+        type: 'Fiction',
+    },
+
+    {
+        id: 3,
+        title: 'The Selfish Gene',
+        author: 'Richard Dawkins',
+        year: '1976',
+        description: 'The Selfish Gene is a 1976 book on evolution by the biologist Richard Dawkins, in which the author builds upon the principal theory of George C. Williams\'s Adaptation and Natural Selection (1966). Dawkins uses the term "selfish gene" as a way of expressing the gene-centred view of evolution (as opposed to the views focused on the organism and the group), popularising ideas developed during the 1960s by W. D. Hamilton and others. From the gene-centred view, it follows that the more two individuals are genetically related, the more sense (at the level of the genes) it makes for them to behave selflessly with each other. Therefore, the concept is especially good at explaining many forms of altruism seen in nature.',
+        type: 'Science',
+    },
+    {
+        id: 4,
+        title: 'The God Delusion',
+        author: 'Richard Dawkins',
+        year: '2006',
+        description: 'The God Delusion is a 2006 book by English biologist Richard Dawkins, a professorial fellow at New College, Oxford, and former holder of the Charles Simonyi Chair for the Public Understanding of Science at the University of Oxford. In The God Delusion, Dawkins contends that a supernatural creator almost certainly does not exist and that belief in a personal god qualifies as a delusion, which he defines as a persistent false belief held in the face of strong contradictory evidence. He is sympathetic to Robert Pirsigs statement in Lila that "when one person suffers from a delusion it is called insanity. When many people suffer from a delusion it is called religion." With many examples, he explains that one does not need religion to be moral and that the roots of religion and of morality can be explained in non-religious terms.',
+        type: 'Science',
+    },
+
+];
