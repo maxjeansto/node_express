@@ -2,10 +2,11 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import routerExpress from './routes/index.js'
+import './config/db.js';
 
 
 const app = express()
-const port = 80
+const port = 3001
 
 app.use(morgan('dev'))
 app.use(cors())

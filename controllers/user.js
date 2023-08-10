@@ -1,111 +1,86 @@
-import { writeFileSync, readFileSync } from 'fs';
-import chalk from 'chalk';
 import { success, error } from '../utils/response.js';
-import e from 'express';
+import user from '../models/Users.js';
+import mongoose from 'mongoose';
 
-// Fonction pour recuperer tous les utilisateurs dans le fichier users.json
-export const listUsers = (req, res) => {
-    const users = JSON.parse(readFileSync('./data/users.json', 'utf-8'));
-    res.status(200).send(users);
-}
 
-export const getUsers = () => {
-    return JSON.parse(readFileSync('./data/users.json', 'utf-8'));
+//Fonction pour recuperer tous les utilisateur de la base mongodb avec mongoose
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await user.find({});
+    success(res, 400, users);
+  } catch (err) {
+    console.error(err);
+    error(res, 500, 'User not found.');
+  }
+};
+
+// Fonction pour recuperer un utilisateur dans la base mongodb avec mongoose
+export const getUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await user.findById(userId);
+    success(res, 400, user);
+  } catch (err) {
+    error(res, 404, 'User not found.');
+  }
+};
+
+// Fonction pour rajouter un utilisateur dans la base mongodb avec mongoose
+export const createUser = (req, res) => {
+  const newUser = new user(req.body);
+
+  newUser.save()
+    .then(() => {
+      console.log('Utilisateur enregistré avec succès !');
+      res.status(201).send('Utilisateur créé avec succès');
+    })
+    .catch(err => {
+      console.error('Une erreur est survenue lors de l\'enregistrement de l\'utilisateur', err);
+      res.status(500).send('Erreur lors de la création de l\'utilisateur');
+    });
+};
+
+// Fonction pour mettre a jour un utilisateur dans la base mongodb avec mongoose
+
+export const updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const updateData = { ...req.body };
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return error(res, 400, 'Identifiant non valide');
   }
 
+  try {
+    const updatedUser = await user.findByIdAndUpdate(userId, updateData, { new: true });
 
-// Fonction pour recuperer un utilisateur dans le fichier users.json en utilisant l'id
-export const getUser = (req, res) => {
-    try {
-       const { user } = req;
-       success(res, user);
-    } catch (err) { // Notez que j'ai changé le nom de la variable à 'err'
-        error(res, 'User not found.');
+    if (!updatedUser) {
+      return error(res, 404, 'Utilisateur non trouvé');
     }
-}
 
+    success(res, 200, `Utilisateur ${req.body.firstName} mis à jour avec succès`);
+  } catch (err) {
+    error(res, 500, "Erreur lors de la mise à jour de l'utilisateur", err);
+  }
+};
 
-// Fonction pour ajouter un utilisateur dans le fichier users.json en utilisant les parametre url(id, name, email)
-export const addUserUrl = (req, res) => {
-    const { id, name, email } = req.query;
-    let users;
-    try {
-        users = JSON.parse(readFileSync('./data/users.json', 'utf-8'));
-    } catch (error) {
-        users = [];
-    }
-    if (users.some((user) => user.id == id)) {
-        error(res, 'User already exists. Please use a different id.');
-    } else {
-        users.push({ id, name, email });
-        writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
-        success(res, 'User added successfully.');
-    }
-}
+// Fonction pour supprimer un utilisateur dans la base mongodb avec mongoose
 
-// Fonction pour ajouter un utilisateur dans le fichier users.json en utilisant le body json 
-export const addUser = (req, res) => {
-    const body = req.body;
-    let users;
-    console.log(body);
-    try {
-        users = JSON.parse(readFileSync('./data/users.json', 'utf-8'));
-    } catch (error) {
-        users = [];
-    }
-    console.log({ users });
-    if (users.some((user) => user.id == body.id)) {
+export const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return error(res, 400, 'Identifiant non valide');
+  }
 
-        error(res, 'User already exists. Please use a different id.');
-    } else {
-        const lastUser = users[users.length - 1];
-        const newId = lastUser ? lastUser.id + 1 : 1;
+  try {
+    const deletedUser = await user.findByIdAndDelete(userId);
 
-        // Ajouter le nouvel ID au body
-        body.id = newId;
-        users.push(body);
-        writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
-        success(res, 'User added successfully.');
+    if (!deletedUser) {
+      return error(res, 404, 'Utilisateur non trouvé');
     }
-}
+    success(res, 200, 'Utilisateur supprimé avec succès');
+  } catch (e) {
+    error(res, 500, 'Erreur non trouvée');
+    console.error(e);
+  }
+};
 
-// Fonction pour modifier un utilisateur dans le fichier users.json en utilisant le body json 
-export const modifyUser = (req, res) => {
-    const { id } = req.params;
-    const body = req.body;
-    let users;
-    try {
-        users = JSON.parse(readFileSync('./data/users.json', 'utf-8'));
-    } catch (error) {
-        console.log(chalk.red('Failed to read the file.'));
-        return;
-    }
-    const userIndex = users.findIndex((user) => user.id == id);
-    if (userIndex > -1) {
-        users[userIndex] = { ...users[userIndex], ...body };
-        writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
-        success(res, 'User updated successfully.');
-    } else {
-        error(res, 'User not found.');
-    }
-}
-
-// Fonction pour supprimer un utilisateur dans le fichier users.json en utilisant l'id
-export const deleteUser = (req, res) => {
-    const { id } = req.params;
-    let users;
-    try {
-        users = JSON.parse(readFileSync('./data/users.json', 'utf-8'));
-    } catch (error) {
-        console.log(chalk.red('Failed to read the file.'));
-        return;
-    }
-    const userIndex = users.findIndex((user) => user.id == id);
-    if (userIndex > -1) {
-        users.splice(userIndex, 1);
-        writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
-        success(res, 'User deleted successfully.');
-    } else {
-        error(res, 'User not found.');
-    }
-}

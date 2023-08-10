@@ -1,9 +1,10 @@
-const success = (res, data) => {    
-    res.status(200).send(data);
-}
+const success = (res, status, message) => {
+    res.status(status).json({ message });
+  };
 
-const error = (res, message) => {
-    res.status(404).send(message);
-}
+
+const error = (res, status, message) => {
+    res.status(status).json({ message });
+  };
 
 export { success, error };

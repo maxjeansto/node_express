@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const book = new mongoose.model('Book',{
-    id: Number,
-    title: String,
-    author: String,
-    description: String,
-    price: Number,
-    type: String,
+    title: {type:String, default:""},
+    author: {type:String, default:""},
+    description: {type:String, default:""},
+    price: {type:Number, default:0},
+    type: {type:String, default:""},
 });
 
-module.exports = book;
+
+export default book;

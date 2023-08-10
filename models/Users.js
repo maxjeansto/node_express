@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
-const user = new mongoose.model('User',{
-    id: Number,
-    firstName: String,
-    lastName: String,
-    email: String,
-    secret: String,
-    age: Number,
-    phone: String,
-    type: String,
-});
 
-module.exports = user;
+const userSchema = new mongoose.Schema({
+    firstName: {type:String, default:""},
+    lastName: {type:String, default:""},
+    email: {type:String, required:false},
+    secret: {type:String, required:true},
+    age: {type:Number, default:0},
+    phone: {type:String, default:""},
+    type: {type:String, default:""},});
+
+export const user = mongoose.model('User', userSchema, 'Users');
+
+export default user;
